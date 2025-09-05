@@ -12,14 +12,14 @@ export class ProductType {
     @Column({ type: 'text', nullable: true })
     descripcion: string;
 
-    @Column({ type: 'boolean', default: true })
+    @Column({ type: 'boolean', default: true, name: 'requiere_stock' })
     requiereStock: boolean;
 
-    @Column({ type: 'boolean', default: true })
-    requiereVenta: boolean;
+    @Column({ type: 'boolean', default: true, name: 'permite_venta' })
+    permiteVenta: boolean;
 
-    @Column({ type: 'boolean', default: false })
-    requiereRenta: boolean;
+    @Column({ type: 'boolean', default: false, name: 'permite_renta' })
+    permiteRenta: boolean;
 
     @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
     createdAt: Date

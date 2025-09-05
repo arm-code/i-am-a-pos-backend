@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductTypeDto } from './dto/create-product-type.dto';
 import { UpdateProductTypeDto } from './dto/update-product-type.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProductType } from './entities/product-type.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductTypesService {
-  create(createProductTypeDto: CreateProductTypeDto) {
-    return 'This action adds a new productType';
+
+  constructor(
+    @InjectRepository( ProductType )
+    private readonly productTypeRepository: Repository<ProductType>
+  ){}
+
+  async create(createProductTypeDto: CreateProductTypeDto): Promise<ProductType> {
+    const productType = this.productTypeRepository.create( createProductTypeDto );
+    return await this.productTypeRepository.save( productType );
   }
 
-  findAll() {
-    return `This action returns all productTypes`;
+  async findAll(): Promise<ProductType[]> {
+
+    return await this.productTypeRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} productType`;
+  async findOne(id: number): Promise<ProductType> {
+
+    const productType = await this.productTypeRepository.findOne({ where: { id }})
+
+    if(!productType){
+      throw new NotFoundException(`Tipo de producto con Id ${ id } no encontrado.`)
+    }
+    return productType;
   }
 
-  update(id: number, updateProductTypeDto: UpdateProductTypeDto) {
-    return `This action updates a #${id} productType`;
+  async update(id: number, updateProductTypeDto: UpdateProductTypeDto): Promise<ProductType> {
+
+    const productType = await this.findOne( id )
+    Object.assign( productType, updateProductTypeDto )
+    return await this.productTypeRepository.save( productType );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} productType`;
+  async remove(id: number): Promise<void> {
+    const productType = await this.findOne( id )
+    await this.productTypeRepository.remove( productType )
   }
 }
