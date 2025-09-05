@@ -36,8 +36,7 @@ export class CreateProductDto {
     @Type( () => Number )
     precioVenta: number;
 
-    @IsNumber()
-    @IsPositive()
+    @IsNumber()    
     @Min(0)
     @Type( () => Number )
     @IsOptional()
