@@ -20,10 +20,7 @@ import { ProductsModule } from './modules/products/products.module';
       password: process.env.BD_PASSWORD,
       database: process.env.BD_NAME,
       autoLoadEntities: true,
-      synchronize: false, // true solo en desarrollo
-      extra: {
-        enablePublicKeyRetrieval: true,
-      },
+      synchronize: false, // true solo en desarrollo      
     }),
 
     CategoriesModule,
