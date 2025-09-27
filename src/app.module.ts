@@ -11,11 +11,11 @@ import { ProductsModule } from './modules/products/products.module';
 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.BD_SECUNDARIA_HOST,
-      port: Number(process.env.BD_SECUNDARIA_PUERTO),
-      username: process.env.BD_SECUNDARIA_USUARIO,
-      password: process.env.BD_SECUNDARIA_CONTRASENA,
-      database: process.env.BD_SECUNDARIA_NAME,
+      host: process.env.BD_HOST,
+      port: Number(process.env.BD_PORT),
+      username: process.env.BD_USER,
+      password: process.env.BD_PASSWORD,
+      database: process.env.BD_NAME,
       autoLoadEntities: true,
       synchronize: false, // true solo en desarrollo
     }),
