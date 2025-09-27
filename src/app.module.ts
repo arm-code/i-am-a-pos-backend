@@ -7,7 +7,10 @@ import { ProductsModule } from './modules/products/products.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.production', '.env'], // prioriza prod, luego .env
+    }),
 
     TypeOrmModule.forRoot({
       type: 'mysql',
