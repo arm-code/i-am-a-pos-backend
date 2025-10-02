@@ -38,7 +38,7 @@ export class Product {
 
     @ManyToOne(() => Category, { nullable: true, onDelete: 'SET NULL'})
     @JoinColumn({ name: 'categoria_id'})
-    categoria: Category;
+    categoria: Category | null;
 
     @ManyToOne(() => ProductType, { nullable: false, onDelete: 'RESTRICT'})
     @JoinColumn({ name: 'tipo_producto_id'})
