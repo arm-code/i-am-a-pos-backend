@@ -4,7 +4,6 @@ import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, Primary
 
 @Entity('productos')
 @Index('idx_nombre', ['nombre'])
-@Index('idx_tipo_producto', ['tipoProducto'])
 export class Product {
 
     @PrimaryGeneratedColumn()
@@ -20,21 +19,21 @@ export class Product {
     nombre: string;
 
     @Column({ type: 'text', nullable: true })
-    descripcion: string
+    descripcion: string;
 
-    @Column('decimal', {name: 'precio_compra', precision: 10, scale: 2, default: 0.0})
-    precioCompra: number
+    @Column('numeric', { name: 'precio_compra', precision: 10, scale: 2, default: 0.0 })
+    precioCompra: number;
 
-    @Column('decimal', {name: 'precio_venta', precision: 10, scale: 2})
-    precioVenta: number
+    @Column('numeric', { name: 'precio_venta', precision: 10, scale: 2 })
+    precioVenta: number;
 
-    @Column('decimal', { name: 'precio_renta_diario', precision: 10, scale: 2, default: 0.0 })
+    @Column('numeric', { name: 'precio_renta_diario', precision: 10, scale: 2, default: 0.0 })
     precioRentaDiario: number;
 
-    @Column({ type: 'int', default: 0})
+    @Column({ type: 'int', default: 0 })
     stock: number;
 
-    @Column({ name: 'stock_minimo', type: 'int', default: 0})
+    @Column({ name: 'stock_minimo', type: 'int', default: 0 })
     stockMinimo: number;
 
     @ManyToOne(() => Category, { nullable: true, onDelete: 'SET NULL'})
@@ -43,14 +42,15 @@ export class Product {
 
     @ManyToOne(() => ProductType, { nullable: false, onDelete: 'RESTRICT'})
     @JoinColumn({ name: 'tipo_producto_id'})
+    @Index('idx_tipo_producto_id')
     tipoProducto: ProductType;
 
-    @Column({ type:  'boolean', default: true })
+    @Column({ type: 'boolean', default: true })
     activo: boolean;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
-    createdAt: Date
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz'})
+    createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp'})
-    updatedAt: Date
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz'})
+    updatedAt: Date;
 }

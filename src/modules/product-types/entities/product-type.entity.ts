@@ -21,6 +21,6 @@ export class ProductType {
     @Column({ type: 'boolean', default: false, name: 'permite_renta' })
     permiteRenta: boolean;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
-    createdAt: Date
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz'})
+    createdAt: Date;
 }
