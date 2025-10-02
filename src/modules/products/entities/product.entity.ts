@@ -1,6 +1,7 @@
 import { Category } from "src/modules/categories/entities/category.entity";
+import { ProductImage } from "src/modules/product-images/entities/product-image.entity";
 import { ProductType } from "src/modules/product-types/entities/product-type.entity";
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('productos')
 @Index('idx_nombre', ['nombre'])
@@ -44,6 +45,12 @@ export class Product {
     @JoinColumn({ name: 'tipo_producto_id'})
     @Index('idx_tipo_producto_id')
     tipoProducto: ProductType;
+
+    @Column({ name: 'imagen_url', type: 'text', nullable: true })
+    imagenUrl: string;
+
+    @OneToMany( () => ProductImage, (img) => img.producto, { cascade: true })
+    imagenes?: ProductImage[]
 
     @Column({ type: 'boolean', default: true })
     activo: boolean;

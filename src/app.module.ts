@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductTypesModule } from './modules/product-types/product-types.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ProductImagesModule } from './modules/product-images/product-images.module';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { ProductsModule } from './modules/products/products.module';
       password: process.env.BD_PASSWORD,
       database: process.env.BD_DATABASENAME,
       autoLoadEntities: true,
-      synchronize: true, // true solo en desarrollo   
+      synchronize: false, // true solo en desarrollo   
       ssl: { rejectUnauthorized: false },   
     }),
 
@@ -28,7 +29,9 @@ import { ProductsModule } from './modules/products/products.module';
 
     ProductTypesModule,
 
-    ProductsModule
+    ProductsModule,
+
+    ProductImagesModule
 
 
   ],
