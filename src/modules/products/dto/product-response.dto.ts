@@ -34,7 +34,7 @@ export class ProductResponseDto {
   stockMinimo: number;
 
   @Expose()
-  categoria: Category;
+  categoria: Category | null;
 
   @Expose()
   tipoProducto: ProductType;

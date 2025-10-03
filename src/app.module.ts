@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductTypesModule } from './modules/product-types/product-types.module';
 import { ProductsModule } from './modules/products/products.module';
+import { ProductImagesModule } from './modules/product-images/product-images.module';
 
 @Module({
   imports: [
@@ -13,21 +14,24 @@ import { ProductsModule } from './modules/products/products.module';
     }),
 
     TypeOrmModule.forRoot({
-      type: 'mysql',
+      type: 'postgres',
       host: process.env.BD_HOST,
       port: Number(process.env.BD_PORT),
       username: process.env.BD_USER,
       password: process.env.BD_PASSWORD,
-      database: process.env.BD_NAME,
+      database: process.env.BD_DATABASENAME,
       autoLoadEntities: true,
-      synchronize: false, // true solo en desarrollo      
+      synchronize: false, // true solo en desarrollo   
+      ssl: { rejectUnauthorized: false },   
     }),
 
     CategoriesModule,
 
     ProductTypesModule,
 
-    ProductsModule
+    ProductsModule,
+
+    ProductImagesModule
 
 
   ],

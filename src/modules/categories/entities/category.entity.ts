@@ -6,16 +6,15 @@ export class Category {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ length: 100 })
+    @Column({ length: 100, unique: true })
     nombre: string;
 
     @Column({ type: 'text', nullable: true})
     descripcion: string;
 
-    @CreateDateColumn({ name: 'created_at', type: 'timestamp'})
+    @CreateDateColumn({ name: 'created_at', type: 'timestamptz'})
     createdAt: Date;
 
-    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp'})
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz'})
     updatedAt: Date;
-
 }
