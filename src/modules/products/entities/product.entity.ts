@@ -44,10 +44,7 @@ export class Product {
     @ManyToOne(() => ProductType, { nullable: false, onDelete: 'RESTRICT'})
     @JoinColumn({ name: 'tipo_producto_id'})
     @Index('idx_tipo_producto_id')
-    tipoProducto: ProductType;
-
-    @Column({ name: 'imagen_url', type: 'text', nullable: true })
-    imagenUrl: string;
+    tipoProducto: ProductType;    
 
     @OneToMany( () => ProductImage, (img) => img.producto, { cascade: true })
     imagenes?: ProductImage[]
