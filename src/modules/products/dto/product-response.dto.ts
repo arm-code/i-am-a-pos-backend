@@ -1,6 +1,7 @@
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Transform } from 'class-transformer';
 import { Category } from '../../categories/entities/category.entity';
 import { ProductType } from '../../product-types/entities/product-type.entity';
+import { ProductImage } from 'src/modules/product-images/entities/product-image.entity';
 
 export class ProductResponseDto {
   @Expose()
@@ -47,6 +48,13 @@ export class ProductResponseDto {
 
   @Expose()
   updatedAt: Date;
+
+  @Expose()
+  @Transform(({ obj }) => {
+    const principal = obj.imagenes?.find((img: ProductImage) => img.principal);
+    return principal ? principal.url : (obj.imagenes?.[0]?.url ?? null);
+  })
+  imagenPrincipal: string | null;
 
   constructor(partial: Partial<ProductResponseDto>) {
     Object.assign(this, partial);

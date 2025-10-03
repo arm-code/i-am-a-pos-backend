@@ -21,7 +21,7 @@ import { ProductImagesModule } from './modules/product-images/product-images.mod
       password: process.env.BD_PASSWORD,
       database: process.env.BD_DATABASENAME,
       autoLoadEntities: true,
-      synchronize: false, // true solo en desarrollo   
+      synchronize: true, // true solo en desarrollo   
       ssl: { rejectUnauthorized: false },   
     }),
 
