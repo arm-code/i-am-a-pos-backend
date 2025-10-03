@@ -29,7 +29,7 @@ export class ProductImagesController {
 
   @Post()
   @UseInterceptors(FileInterceptor('file', {
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
     fileFilter: (req, file, cb) => {
       if (!ALLOWED_MIME.includes(file.mimetype)) {
         return cb(new BadRequestException('Tipo de archivo no permitido'), false);
