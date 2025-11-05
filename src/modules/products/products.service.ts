@@ -33,12 +33,12 @@ export class ProductsService {
       }
 
       // Verificar si el código de barras ya existe
-      if (createProductDto.codigoBarras) {
+      if (createProductDto.codigoBarra) {
         const existingCodigoBarras = await this.productRepository.findOne({
-          where: { codigoBarra: createProductDto.codigoBarras }
+          where: { codigoBarra: createProductDto.codigoBarra }
         });
         if (existingCodigoBarras) {
-          throw new ConflictException(`El código de barras ${createProductDto.codigoBarras} ya existe`);
+          throw new ConflictException(`El código de barras ${createProductDto.codigoBarra} ya existe`);
         }
       }
 
@@ -47,7 +47,12 @@ export class ProductsService {
         throw new BadRequestException('El precio de venta debe ser mayor al precio de compra');
       }
 
-      const product = this.productRepository.create(createProductDto);
+      const product = this.productRepository.create({
+        ... createProductDto,
+        categoria: createProductDto.categoriaId ? { id: createProductDto.categoriaId } : null,
+        tipoProducto: {id: createProductDto.tipoProductoId }
+      });
+
       return await this.productRepository.save(product);
 
     } catch (error) {
@@ -162,12 +167,12 @@ export class ProductsService {
       }
 
       // Validar código de barras único (si se está actualizando)
-      if (updateProductDto.codigoBarras && updateProductDto.codigoBarras !== product.codigoBarra) {
+      if (updateProductDto.codigoBarra && updateProductDto.codigoBarra !== product.codigoBarra) {
         const existingCodigoBarras = await this.productRepository.findOne({
-          where: { codigoBarra: updateProductDto.codigoBarras }
+          where: { codigoBarra: updateProductDto.codigoBarra }
         });
         if (existingCodigoBarras) {
-          throw new ConflictException(`El código de barras ${updateProductDto.codigoBarras} ya existe`);
+          throw new ConflictException(`El código de barras ${updateProductDto.codigoBarra} ya existe`);
         }
       }
 
