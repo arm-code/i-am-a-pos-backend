@@ -23,8 +23,8 @@ async function bootstrap() {
   )
 
   const config = new DocumentBuilder()
-  .setTitle('I AM A POS')
-  .setDescription('BACKEND OF MY POS')
+  .setTitle('I Am a point of sale')
+  .setDescription('Backend for my point of sale')
   .setVersion('1.0')  
   .build();
 
