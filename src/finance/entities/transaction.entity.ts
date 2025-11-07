@@ -1,15 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from 'src/shared/base.entity';
+
 import { Column, Entity, OneToOne } from 'typeorm';
 import { Sale } from './sale.entity';
 import { Rental } from './rental.entity';
+import { BaseEntity } from '../../shared/base.entity';
 
 // definimos algunos types
 export type TransactionType = 'income' | 'expense' | 'sale' | 'rental';
 export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
 
 @Entity('transactions')
-export class Transaction extends Base {
+export class Transaction extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 20,

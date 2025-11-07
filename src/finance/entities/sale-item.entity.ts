@@ -1,11 +1,11 @@
 
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Base } from '../../shared/base.entity';
+import { BaseEntity } from '../../shared/base.entity';
 import { Sale } from './sale.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('sale_items')
-export class SaleItem extends Base {
+export class SaleItem extends BaseEntity {
   @Column({ type: 'uuid' })
   @ApiProperty({ description: 'ID de la venta' })
   sale_id: string;

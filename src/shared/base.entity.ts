@@ -1,10 +1,11 @@
+// src/shared/base.entity.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-export class Base {
+export abstract class BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty({
-    description: 'Id unico de registro',
+    description: 'Id único de registro',
   })
   id: string;
 
@@ -14,7 +15,7 @@ export class Base {
   })
   created_at: Date;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   @ApiProperty({
     description: 'Fecha de última actualización',
   })

@@ -1,13 +1,13 @@
 // src/finance/entities/rental.entity.ts
 import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
-import { Base } from '../../shared/base.entity';
+import { BaseEntity } from '../../shared/base.entity';
 import { Transaction } from './transaction.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export type RentalStatus = 'active' | 'completed' | 'cancelled' | 'overdue';
 
 @Entity('rentals')
-export class Rental extends Base {
+export class Rental extends BaseEntity {
   @Column({ type: 'uuid' })
   @ApiProperty({ description: 'ID de la transacción asociada' })
   transaction_id: string;

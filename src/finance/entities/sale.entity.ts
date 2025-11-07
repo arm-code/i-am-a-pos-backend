@@ -1,4 +1,4 @@
-import { Base } from 'src/shared/base.entity';
+import { BaseEntity } from '../../shared/base.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { Transaction } from './transaction.entity';
 import { PaymentMethod } from './payment-method.entity';
@@ -8,7 +8,7 @@ import { SaleItem } from './sale-item.entity';
 export type SaleStatus = 'pending' | 'completed' | 'cancelled' | 'refunded';
 
 @Entity('sales')
-export class Sale extends Base {
+export class Sale extends BaseEntity {
   @Column({
     type: 'uuid',
   })

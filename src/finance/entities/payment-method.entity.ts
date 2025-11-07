@@ -2,11 +2,11 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { Base } from 'src/shared/base.entity';
+import { BaseEntity } from '../../shared/base.entity';
 import { Sale } from './sale.entity';
 
 @Entity('payment_methods')
-export class PaymentMethod extends Base {
+export class PaymentMethod extends BaseEntity {
   @Column({ type: 'varchar', length: 100 })
   @ApiProperty({ description: 'Nombre del método de pago', example: 'Tarjeta de Crédito' })
   name: string;
