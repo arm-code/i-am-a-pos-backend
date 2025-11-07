@@ -5,6 +5,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductTypesModule } from './modules/product-types/product-types.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ProductImagesModule } from './modules/product-images/product-images.module';
+import { FinanceModule } from './finance/finance.module';
 
 @Module({
   imports: [
@@ -31,7 +32,9 @@ import { ProductImagesModule } from './modules/product-images/product-images.mod
 
     ProductsModule,
 
-    ProductImagesModule
+    ProductImagesModule,
+
+    FinanceModule
 
 
   ],
