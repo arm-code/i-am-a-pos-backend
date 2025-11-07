@@ -5,8 +5,8 @@ import { Type } from 'class-transformer';
 
 export class CreateSaleItemDto {
   @ApiProperty({ description: 'ID del producto' })
-  @IsUUID()
-  product_id: string;
+  @IsNumber()
+  product_id: number;
 
   @ApiProperty({ description: 'Cantidad vendida', example: 2 })
   @IsNumber()

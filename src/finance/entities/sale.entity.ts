@@ -9,23 +9,20 @@ export type SaleStatus = 'pending' | 'completed' | 'cancelled' | 'refunded';
 
 @Entity('sales')
 export class Sale extends BaseEntity {
-  @Column({
-    type: 'uuid',
-  })
+  @Column()
   @ApiProperty({
     description: 'Id de la transaccion asociada',
   })
-  transaction_id: string;
+  transaction_id: number;
 
-  @Column({
-    type: 'uuid',
+  @Column({    
     nullable: true,
   })
   @ApiProperty({
     description: 'Id del cliente',
     required: false,
   })
-  customer_id: string;
+  customer_id: number;
 
   @Column({
     type: 'decimal',
@@ -62,15 +59,14 @@ export class Sale extends BaseEntity {
   })
   tax_amount: number;
 
-  @Column({
-    type: 'uuid',
+  @Column({    
     nullable: true,
   })
   @ApiProperty({
     description: 'Id del metodo de pago',
     required: false,
   })
-  payment_method_id: string;
+  payment_method_id: number;
 
   @Column({
     type: 'timestamp',

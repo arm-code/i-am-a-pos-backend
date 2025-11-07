@@ -7,9 +7,9 @@ export class CreateSaleDto {
   @ApiPropertyOptional({
     description: 'Id del cliente',
   })
-  @IsUUID()
+  @IsNumber()
   @IsOptional()
-  customer_id?: string;
+  customer_id?: number;
 
   @ApiProperty({
     description: 'Monto total de la transaccion',
@@ -36,9 +36,9 @@ export class CreateSaleDto {
   tax_amount?: number;
 
   @ApiPropertyOptional({ description: 'ID del método de pago' })
-  @IsUUID()
+  @IsNumber()
   @IsOptional()
-  payment_method_id?: string;
+  payment_method_id?: number;
 
   @ApiPropertyOptional({ description: 'Fecha de la venta' })
   @IsDate()

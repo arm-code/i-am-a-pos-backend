@@ -3,11 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'Id único de registro',
   })
-  id: string;
+  id: number;
 
   @CreateDateColumn()
   @ApiProperty({

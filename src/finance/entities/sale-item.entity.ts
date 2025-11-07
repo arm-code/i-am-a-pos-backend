@@ -6,13 +6,13 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('sale_items')
 export class SaleItem extends BaseEntity {
-  @Column({ type: 'uuid' })
+  @Column()
   @ApiProperty({ description: 'ID de la venta' })
-  sale_id: string;
+  sale_id: number;
 
-  @Column({ type: 'uuid' })
+  @Column()
   @ApiProperty({ description: 'ID del producto' })
-  product_id: string;
+  product_id: number;
 
   @Column({ type: 'int' })
   @ApiProperty({ description: 'Cantidad vendida', example: 2 })

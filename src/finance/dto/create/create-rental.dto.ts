@@ -11,13 +11,13 @@ import { Type } from 'class-transformer';
 
 export class CreateRentalDto {
   @ApiPropertyOptional({ description: 'ID del cliente' })
-  @IsUUID()
+  @IsNumber()
   @IsOptional()
-  customer_id?: string;
+  customer_id?: number;
 
   @ApiProperty({ description: 'ID del producto rentado' })
-  @IsUUID()
-  product_id: string;
+  @IsNumber()
+  product_id: number;
 
   @ApiProperty({ description: 'Fecha de inicio de la renta' })
   @IsDate()

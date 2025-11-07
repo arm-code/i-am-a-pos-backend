@@ -8,17 +8,17 @@ export type RentalStatus = 'active' | 'completed' | 'cancelled' | 'overdue';
 
 @Entity('rentals')
 export class Rental extends BaseEntity {
-  @Column({ type: 'uuid' })
+  @Column()
   @ApiProperty({ description: 'ID de la transacción asociada' })
-  transaction_id: string;
+  transaction_id: number;
 
-  @Column({ type: 'uuid', nullable: true })
+  @Column({ nullable: true })
   @ApiProperty({ description: 'ID del cliente', required: false })
-  customer_id: string;
+  customer_id: number;
 
-  @Column({ type: 'uuid' })
+  @Column()
   @ApiProperty({ description: 'ID del producto rentado' })
-  product_id: string;
+  product_id: number;
 
   @Column({ type: 'timestamp' })
   @ApiProperty({ description: 'Fecha de inicio de la renta' })
