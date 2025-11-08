@@ -164,32 +164,6 @@ Son datos de ejemplo que se cargan automáticamente en la base de datos local pa
 ### Comandos de Seeds
 ```bash
 # Ejecutar seeds (cargar datos de ejemplo)
-npm run seed:run
-
-# Limpiar y recargar datos frescos
-npm run seed:reset
-
-# Iniciar desarrollo con datos de ejemplo automáticamente
-npm run dev:with-seeds
+npm run seed
 ```
 
-### Tipos de Producto Disponibles
-| Tipo | Descripción | Requiere Stock | Permite Venta | Permite Renta |
-|------|-------------|----------------|---------------|---------------|
-| Producto Físico | Productos tangibles | ✅ | ✅ | ❌ |
-| Producto Digital | Software, eBooks, cursos | ❌ | ✅ | ❌ |
-| Servicio | Prestación de servicios | ❌ | ✅ | ❌ |
-| Equipo para Renta | Equipos para renta | ✅ | ❌ | ✅ |
-| Consumible | Productos que se gastan | ✅ | ✅ | ❌ |
-| Mixto | Puede venderse o rentarse | ✅ | ✅ | ✅ |
-| Kit/Paquete | Conjuntos de productos | ✅ | ✅ | ❌ |
-
-### Productos de Ejemplo Incluidos
-- 📱 **Electrónicos**: iPhone 14, Samsung Galaxy, PlayStation 5
-- 🎓 **Digital**: Curso de programación online  
-- 👕 **Ropa**: Camisetas, jeans
-- 🛋️ **Hogar**: Silla gamer
-- 📷 **Renta**: Cámara profesional para renta
-- 🛠️ **Mixto**: Kit de herramientas (venta/renta)
-
----
