@@ -27,7 +27,8 @@
     "db:down": "docker-compose down",
     "dev": "cross-env NODE_ENV=development npm run start:dev",
     "migration:run:dev": "cross-env NODE_ENV=development npm run migration:run",
-    "seed": "ts-node src/seed.ts"
+    "seed": "ts-node src/seed.ts",
+    "del-seed": "ts-node -r tsconfig-paths/register src/del-seed.ts"
     
 
   },

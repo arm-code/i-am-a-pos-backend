@@ -9,6 +9,7 @@ import { Rental } from './entities/rental.entity';
 import { RentalService } from './services/rental.service';
 import { SaleService } from './services/sale.service';
 import { TransactionService } from './services/transaction.service';
+import { FinanceController } from './controllers/finance.controller';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { TransactionService } from './services/transaction.service';
       Rental,
     ]),
   ],
-  controllers: [],
+  controllers: [FinanceController],
   providers: [FinanceService, RentalService, SaleService, TransactionService],
   exports: [TypeOrmModule],
 })
