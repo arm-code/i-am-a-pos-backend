@@ -5,6 +5,13 @@ import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested
 import { CreateSaleItemDto } from './create-sale-item.dto';
 
 export class CreateCompleteSaleDto {
+  
+  @ApiPropertyOptional({ description: 'ID de la transaccion' })  
+  @IsOptional()
+  @IsNumber()
+  transaction_id?: number;
+
+
   @ApiPropertyOptional({ description: 'ID del cliente' })  
   @IsOptional()
   @IsNumber()
