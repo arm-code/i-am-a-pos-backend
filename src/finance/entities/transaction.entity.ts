@@ -4,10 +4,12 @@ import { Column, Entity, OneToOne } from 'typeorm';
 import { Sale } from './sale.entity';
 import { Rental } from './rental.entity';
 import { BaseEntity } from '../../shared/base.entity';
+import { TransactionType } from '../types/transactions.types';
+import { TransactionStatus } from '../types/transactions-status.types';
 
 // definimos algunos types
-export type TransactionType = 'income' | 'expense' | 'sale' | 'rental';
-export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
+
+
 
 @Entity('transactions')
 export class Transaction extends BaseEntity {

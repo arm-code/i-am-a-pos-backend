@@ -7,6 +7,8 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { TransactionStatus } from 'src/finance/types/transactions-status.types';
+import { TransactionType } from 'src/finance/types/transactions.types';
 
 export class CreateTransactionDto {
   @ApiProperty({
@@ -14,7 +16,7 @@ export class CreateTransactionDto {
     enum: ['income', 'expense', 'sale', 'rental'],
   })
   @IsEnum(['income', 'expense', 'sale', 'rental'])
-  type: string;
+  type: TransactionType;
 
   @ApiProperty({
     description: 'Monto de la transaccion',
@@ -56,7 +58,7 @@ export class CreateTransactionDto {
   })
   @IsEnum(['pending', 'completed', 'cancelled'])
   @IsOptional()
-  status?: string;
+  status?: TransactionStatus;
 
   @ApiPropertyOptional({
     description: 'Tipo de negocio (para filtros)',
