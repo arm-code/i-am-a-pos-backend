@@ -8,6 +8,7 @@ import {
   IsEnum,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { TransactionStatus } from 'src/finance/types/transactions-status.types';
 
 export class CreateRentalDto {
   @ApiPropertyOptional({ description: 'ID del cliente' })
@@ -51,5 +52,5 @@ export class CreateRentalDto {
   })
   @IsEnum(['active', 'completed', 'cancelled', 'overdue'])
   @IsOptional()
-  status?: string;
+  status?: TransactionStatus;
 }

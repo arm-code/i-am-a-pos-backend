@@ -3,8 +3,9 @@ import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { BaseEntity } from '../../shared/base.entity';
 import { Transaction } from './transaction.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { RentalStatus } from '../types/rental-status.types';
 
-export type RentalStatus = 'active' | 'completed' | 'cancelled' | 'overdue';
+
 
 @Entity('rentals')
 export class Rental extends BaseEntity {

@@ -5,10 +5,10 @@ import { IsArray, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested
 import { CreateSaleItemDto } from './create-sale-item.dto';
 
 export class CreateCompleteSaleDto {
-  @ApiPropertyOptional({ description: 'ID del cliente' })
-  @IsUUID()
+  @ApiPropertyOptional({ description: 'ID del cliente' })  
   @IsOptional()
-  customer_id?: string;
+  @IsNumber()
+  customer_id?: number;
 
   @ApiProperty({ description: 'Monto total de la venta', example: 2500.75 })
   @IsNumber()
@@ -27,10 +27,10 @@ export class CreateCompleteSaleDto {
   @IsOptional()
   tax_amount?: number;
 
-  @ApiPropertyOptional({ description: 'ID del método de pago' })
-  @IsUUID()
+  @ApiPropertyOptional({ description: 'ID del método de pago' })  
   @IsOptional()
-  payment_method_id?: string;
+  @IsNumber()
+  payment_method_id?: number;
 
   @ApiPropertyOptional({ description: 'Fecha de la venta' })
   @IsOptional()
