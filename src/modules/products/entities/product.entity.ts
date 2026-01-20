@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Category } from "src/modules/categories/entities/category.entity";
-import { ProductImage } from "src/modules/product-images/entities/product-image.entity";
-import { ProductType } from "src/modules/product-types/entities/product-type.entity";
+import { Category } from "../../../modules/categories/entities/category.entity";
+import { ProductImage } from "../../../modules/product-images/entities/product-image.entity";
+import { ProductType } from "../../../modules/product-types/entities/product-type.entity";
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('productos')
