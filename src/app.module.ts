@@ -22,7 +22,7 @@ import { ProductImagesModule } from './modules/product-images/product-images.mod
       database: process.env.BD_DATABASENAME,
       autoLoadEntities: true,
       synchronize: false, // true solo en desarrollo   
-      ssl: { rejectUnauthorized: false },   
+      // ssl: { rejectUnauthorized: false },   
     }),
 
     CategoriesModule,
