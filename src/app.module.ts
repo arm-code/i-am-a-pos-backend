@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductTypesModule } from './modules/product-types/product-types.module';
 import { ProductsModule } from './modules/products/products.module';
 import { ProductImagesModule } from './modules/product-images/product-images.module';
+import { FinanceModule } from './finance/finance.module';
+import { SalesNotesModule } from './modules/sales-notes/sales-notes.module';
 
 @Module({
   imports: [
@@ -13,16 +15,32 @@ import { ProductImagesModule } from './modules/product-images/product-images.mod
       envFilePath: ['.env.production', '.env'], // prioriza prod, luego .env
     }),
 
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.BD_HOST,
-      port: Number(process.env.BD_PORT),
-      username: process.env.BD_USER,
-      password: process.env.BD_PASSWORD,
-      database: process.env.BD_DATABASENAME,
-      autoLoadEntities: true,
-      synchronize: false, // true solo en desarrollo   
-      ssl: { rejectUnauthorized: false },   
+    // Debemos configurar de manera asincrona TypeORM para poder utilizar la funcion de configService
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get('BD_HOST'),
+        port: +configService.get('BD_PORT'),
+        username: configService.get('BD_USER'),
+        password: configService.get('BD_PASSWORD'),
+        database: configService.get('BD_DATABASENAME'),
+
+        autoLoadEntities: true,
+
+        //IMPORTANTE: true solo en desarrollo, si lo activas, reemplaza los cambios que vayas haciendo en las entidades automaticamente, se pueden perder datos importantes.
+        synchronize: true,
+        migrations: [__dirname + '/migrations/*{.ts,.js}'],
+        migrationsRun: false, // false: sirve para no ejecutar la migraciones automaticamente
+        logging: configService.get('NODE_ENV') === 'development',
+
+        ssl:
+          configService.get('NODE_ENV') === 'production'
+            ? { rejectUnauthorized: false }
+            : false,
+      }),
+      inject: [ConfigService],
     }),
 
     CategoriesModule,
@@ -31,14 +49,12 @@ import { ProductImagesModule } from './modules/product-images/product-images.mod
 
     ProductsModule,
 
-    ProductImagesModule
+    ProductImagesModule,
 
-
+    FinanceModule,
+    SalesNotesModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {
-
-
-}
+export class AppModule { }

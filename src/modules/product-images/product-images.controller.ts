@@ -3,6 +3,7 @@ import {
   Controller, Get, Post, Param, UseInterceptors, UploadedFile,
   Delete, Patch, ParseIntPipe, BadRequestException
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { ProductImagesService } from './product-images.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -17,17 +18,38 @@ function ensureDirSync(dir: string) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 }
 
+@ApiTags('Imágenes de Producto')
 @Controller('productos/:id/imagenes')
 // 👉 aquí puedes aplicar tu AuthGuard que valida el JWT de Supabase
 export class ProductImagesController {
-  constructor(private readonly svc: ProductImagesService) {}
+  constructor(private readonly svc: ProductImagesService) { }
 
   @Get()
+  @ApiOperation({ summary: 'Listar todas las imágenes de un producto' })
+  @ApiParam({ name: 'id', description: 'ID del producto', type: Number })
+  @ApiResponse({ status: 200, description: 'Lista de imágenes del producto' })
   async list(@Param('id', ParseIntPipe) id: number) {
     return this.svc.list(id);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Subir una imagen para un producto' })
+  @ApiConsumes('multipart/form-data')
+  @ApiParam({ name: 'id', description: 'ID del producto', type: Number })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+          description: 'Archivo de imagen (JPEG, PNG, WebP, AVIF, máx 20MB)'
+        }
+      }
+    }
+  })
+  @ApiResponse({ status: 201, description: 'Imagen subida exitosamente' })
+  @ApiResponse({ status: 400, description: 'Archivo inválido o tipo no permitido' })
   @UseInterceptors(FileInterceptor('file', {
     limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
     fileFilter: (req, file, cb) => {
@@ -58,6 +80,11 @@ export class ProductImagesController {
   }
 
   @Patch(':imageId/principal')
+  @ApiOperation({ summary: 'Establecer imagen principal del producto' })
+  @ApiParam({ name: 'id', description: 'ID del producto', type: Number })
+  @ApiParam({ name: 'imageId', description: 'ID de la imagen', type: Number })
+  @ApiResponse({ status: 200, description: 'Imagen principal actualizada exitosamente' })
+  @ApiResponse({ status: 404, description: 'Producto o imagen no encontrada' })
   async setPrincipal(
     @Param('id', ParseIntPipe) id: number,
     @Param('imageId', ParseIntPipe) imageId: number,
@@ -66,6 +93,11 @@ export class ProductImagesController {
   }
 
   @Delete(':imageId')
+  @ApiOperation({ summary: 'Eliminar una imagen del producto' })
+  @ApiParam({ name: 'id', description: 'ID del producto', type: Number })
+  @ApiParam({ name: 'imageId', description: 'ID de la imagen', type: Number })
+  @ApiResponse({ status: 200, description: 'Imagen eliminada exitosamente' })
+  @ApiResponse({ status: 404, description: 'Producto o imagen no encontrada' })
   async remove(
     @Param('id', ParseIntPipe) id: number,
     @Param('imageId', ParseIntPipe) imageId: number,

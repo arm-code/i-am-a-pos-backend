@@ -1,0 +1,1 @@
+export type RentalStatus = 'active' | 'completed' | 'cancelled' | 'overdue';

@@ -1,4 +1,4 @@
-import { Product } from 'src/modules/products/entities/product.entity';
+import { Product } from '../../../modules/products/entities/product.entity';
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('imagenes_producto')
