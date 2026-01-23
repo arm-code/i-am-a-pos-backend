@@ -30,7 +30,7 @@ import { SalesNotesModule } from './modules/sales-notes/sales-notes.module';
         autoLoadEntities: true,
 
         //IMPORTANTE: true solo en desarrollo, si lo activas, reemplaza los cambios que vayas haciendo en las entidades automaticamente, se pueden perder datos importantes.
-        synchronize: true,
+        synchronize: false,
         migrations: [__dirname + '/migrations/*{.ts,.js}'],
         migrationsRun: false, // false: sirve para no ejecutar la migraciones automaticamente
         logging: configService.get('NODE_ENV') === 'development',
