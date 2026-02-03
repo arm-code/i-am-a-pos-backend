@@ -37,7 +37,7 @@ export class ReportsService {
 
         const totalSold = sales.reduce((sum, sale) => sum + Number(sale.total), 0);
         const byPaymentType = sales.reduce((acc, sale) => {
-            const type = sale.paymentMethod?.name || 'Otro';
+            const type = sale.paymentMethod?.key || 'Otro';
             acc[type] = (acc[type] || 0) + Number(sale.total);
             return acc;
         }, {});

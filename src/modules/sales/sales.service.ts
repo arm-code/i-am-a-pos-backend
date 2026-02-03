@@ -10,6 +10,7 @@ import { SaleItem } from './entities/sale-item.entity';
 import { PaymentMethod } from './entities/payment-method.entity';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { Product } from '../inventory/entities/product.entity';
+import { Movement, MovementType } from '../inventory/entities/movement.entity';
 import { CustomersService } from '../customers/customers.service';
 
 @Injectable()
@@ -79,6 +80,15 @@ export class SalesService {
                     subtotal,
                 });
                 saleItems.push(saleItem);
+
+                // Record movement (Audit)
+                const movement = queryRunner.manager.create(Movement, {
+                    product,
+                    quantity: -item.quantity, // Negative for sales
+                    type: MovementType.SALE,
+                    reason: `Venta registrada`,
+                });
+                await queryRunner.manager.save(movement);
             }
 
             const sale = this.saleRepository.create({

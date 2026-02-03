@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { Category } from './entities/category.entity';
+import { Movement, MovementType } from './entities/movement.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
@@ -13,6 +14,8 @@ export class InventoryService {
         private readonly productRepository: Repository<Product>,
         @InjectRepository(Category)
         private readonly categoryRepository: Repository<Category>,
+        @InjectRepository(Movement)
+        private readonly movementRepository: Repository<Movement>,
     ) { }
 
     async createProduct(createProductDto: CreateProductDto) {
@@ -76,7 +79,7 @@ export class InventoryService {
         return { deleted: true };
     }
 
-    async addStock(id: string, amount: number) {
+    async addStock(id: string, amount: number, reason?: string) {
         if (amount <= 0) {
             throw new BadRequestException('Amount to add must be greater than zero');
         }
@@ -84,7 +87,23 @@ export class InventoryService {
         const product = await this.findOneProduct(id);
         product.stock = Number(product.stock) + Number(amount);
 
+        // Record movement
+        const movement = this.movementRepository.create({
+            product,
+            quantity: amount,
+            type: MovementType.ADJUSTMENT,
+            reason: reason || 'Ajuste manual de stock',
+        });
+        await this.movementRepository.save(movement);
+
         return await this.productRepository.save(product);
+    }
+
+    async findAllMovements() {
+        return await this.movementRepository.find({
+            relations: ['product'],
+            order: { createdAt: 'DESC' },
+        });
     }
 
     // Category Methods

@@ -1,6 +1,7 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../shared/entities/base.entity';
 import { Category } from './category.entity';
+import { Movement } from './movement.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -32,4 +33,7 @@ export class Product extends BaseEntity {
         onDelete: 'SET NULL',
     })
     category: Category;
+
+    @OneToMany(() => Movement, (movement) => movement.product)
+    movements: Movement[];
 }

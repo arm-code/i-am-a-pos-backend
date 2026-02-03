@@ -65,12 +65,23 @@ export class InventoryController {
             type: 'object',
             properties: {
                 amount: { type: 'number', example: 50, description: 'Cantidad de stock a sumar' },
+                reason: { type: 'string', example: 'Compra a proveedor', description: 'Motivo del ajuste' },
             },
             required: ['amount'],
         },
     })
-    addStock(@Param('id') id: string, @Body('amount') amount: number) {
-        return this.inventoryService.addStock(id, amount);
+    addStock(
+        @Param('id') id: string,
+        @Body('amount') amount: number,
+        @Body('reason') reason?: string,
+    ) {
+        return this.inventoryService.addStock(id, amount, reason);
+    }
+
+    @Get('movements')
+    @ApiOperation({ summary: 'Get all inventory movements (Audit Log)' })
+    findAllMovements() {
+        return this.inventoryService.findAllMovements();
     }
 
     @Post('categories')
