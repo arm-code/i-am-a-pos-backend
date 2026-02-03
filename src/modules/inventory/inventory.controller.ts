@@ -12,7 +12,7 @@ import { InventoryService } from './inventory.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Inventory')
 @Controller('inventory')
@@ -56,6 +56,21 @@ export class InventoryController {
     @ApiOperation({ summary: 'Delete a product' })
     removeProduct(@Param('id') id: string) {
         return this.inventoryService.removeProduct(id);
+    }
+
+    @Patch('products/:id/add-stock')
+    @ApiOperation({ summary: 'Add stock to an existing product' })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                amount: { type: 'number', example: 50, description: 'Cantidad de stock a sumar' },
+            },
+            required: ['amount'],
+        },
+    })
+    addStock(@Param('id') id: string, @Body('amount') amount: number) {
+        return this.inventoryService.addStock(id, amount);
     }
 
     @Post('categories')

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Like } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -74,6 +74,17 @@ export class InventoryService {
         const product = await this.findOneProduct(id);
         await this.productRepository.remove(product);
         return { deleted: true };
+    }
+
+    async addStock(id: string, amount: number) {
+        if (amount <= 0) {
+            throw new BadRequestException('Amount to add must be greater than zero');
+        }
+
+        const product = await this.findOneProduct(id);
+        product.stock = Number(product.stock) + Number(amount);
+
+        return await this.productRepository.save(product);
     }
 
     // Category Methods
