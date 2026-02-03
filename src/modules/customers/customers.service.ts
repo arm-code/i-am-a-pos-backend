@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Customer } from './entities/customer.entity';
@@ -40,9 +40,25 @@ export class CustomersService {
     }
 
     async registerPayment(id: string, amount: number) {
+        if (amount <= 0) {
+            throw new BadRequestException('Amount must be greater than zero');
+        }
+
         const customer = await this.findOne(id);
+        const currentBalance = Number(customer.balance);
+
+        if (currentBalance <= 0) {
+            throw new BadRequestException('Customer has no debt (balance is already 0)');
+        }
+
+        if (amount > currentBalance) {
+            throw new BadRequestException(
+                `Payment amount (${amount}) exceeds current debt (${currentBalance})`,
+            );
+        }
+
         // Amount is subtracted from balance (debt)
-        customer.balance = Number(customer.balance) - Number(amount);
+        customer.balance = currentBalance - Number(amount);
         return await this.customerRepository.save(customer);
     }
 
