@@ -4,7 +4,7 @@ import {
     BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, Between } from 'typeorm';
 import { Sale } from './entities/sale.entity';
 import { SaleItem } from './entities/sale-item.entity';
 import { PaymentMethod } from './entities/payment-method.entity';
@@ -131,5 +131,24 @@ export class SalesService {
     // Payment Methods
     async findAllPaymentMethods() {
         return await this.paymentMethodRepository.find();
+    }
+
+    async findHistory(dateStr: string) {
+        const [year, month, day] = dateStr.split('-').map(Number);
+        const localDate = new Date(year, month - 1, day);
+
+        const startOfDay = new Date(localDate);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(localDate);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        return await this.saleRepository.find({
+            where: {
+                createdAt: Between(startOfDay, endOfDay),
+            },
+            relations: ['customer', 'items', 'items.product', 'paymentMethod'],
+            order: { createdAt: 'DESC' },
+        });
     }
 }
