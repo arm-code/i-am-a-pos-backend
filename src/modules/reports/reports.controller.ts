@@ -13,11 +13,11 @@ export class ReportsController {
         name: 'date',
         required: false,
         description: 'Fecha del corte (YYYY-MM-DD)',
-        example: '2024-02-03',
+        example: '2026-02-03',
     })
     getCorteCaja(@Query('date') date?: string) {
-        const reportDate = date ? new Date(date) : new Date();
-        return this.reportsService.getCorteCaja(reportDate);
+        const reportDateStr = date || new Date().toISOString().split('T')[0];
+        return this.reportsService.getCorteCaja(reportDateStr);
     }
 
     @Get('net-profit')
@@ -26,21 +26,18 @@ export class ReportsController {
         name: 'startDate',
         required: true,
         description: 'Fecha inicial (YYYY-MM-DD)',
-        example: '2024-02-01',
+        example: '2026-02-01',
     })
     @ApiQuery({
         name: 'endDate',
         required: true,
         description: 'Fecha final (YYYY-MM-DD)',
-        example: '2024-02-29',
+        example: '2026-02-03',
     })
     getNetProfit(
         @Query('startDate') startDate: string,
         @Query('endDate') endDate: string,
     ) {
-        return this.reportsService.getNetProfit(
-            new Date(startDate),
-            new Date(endDate),
-        );
+        return this.reportsService.getNetProfit(startDate, endDate);
     }
 }
