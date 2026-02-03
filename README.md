@@ -60,3 +60,13 @@ Una vez que el servidor esté corriendo, puedes acceder a la documentación inte
 - **Clientes**: Gestión de saldos deudos y abonos.
 - **Ventas**: Registro de ventas con tipos de pago (Efectivo, Tarjeta, Crédito) y descuento automático de stock.
 - **Reportes**: Corte de caja diario y cálculo de ganancias netas.
+- **Seed**: Endpoint controlado para poblar la base de datos con datos de ejemplo (Categorías, Productos y Clientes).
+
+## Carga de Datos de Ejemplo (Seed)
+
+Si deseas probar el sistema con datos de ejemplo, puedes ejecutar el siguiente endpoint (vía Swagger o Postman):
+
+**POST** `http://localhost:3000/api/seed`
+
+> [!WARNING]
+> La ejecución de este endpoint **limpiará todas las tablas** antes de insertar los nuevos datos.

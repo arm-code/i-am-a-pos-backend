@@ -5,6 +5,7 @@ import { InventoryModule } from './modules/inventory/inventory.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { SalesModule } from './modules/sales/sales.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { SeedModule } from './modules/seed/seed.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { ReportsModule } from './modules/reports/reports.module';
     CustomersModule,
     SalesModule,
     ReportsModule,
+    SeedModule,
   ],
   controllers: [],
   providers: [],
