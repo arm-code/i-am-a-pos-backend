@@ -12,7 +12,10 @@ export class CustomersService {
     ) { }
 
     async create(createCustomerDto: CreateCustomerDto) {
-        const customer = this.customerRepository.create(createCustomerDto);
+        const customer = this.customerRepository.create({
+            ...createCustomerDto,
+            name: createCustomerDto.name.toUpperCase(),
+        });
         return await this.customerRepository.save(customer);
     }
 

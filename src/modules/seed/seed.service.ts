@@ -52,15 +52,15 @@ export class SeedService {
         const methods = [
             {
                 key: 'CASH',
-                name: 'Efectivo',
+                name: 'EFECTIVO',
             },
             {
                 key: 'CARD',
-                name: 'Tarjeta',
+                name: 'TARJETA',
             },
             {
                 key: 'CREDIT',
-                name: 'Crédito',
+                name: 'CRÉDITO',
             },
         ];
 
@@ -70,10 +70,10 @@ export class SeedService {
 
     private async seedCategories() {
         const categoriesData = [
-            { name: 'Bebidas', description: 'Refrescos, jugos y aguas' },
-            { name: 'Snacks', description: 'Botanas y dulces' },
-            { name: 'Lácteos', description: 'Leche, quesos y yogures' },
-            { name: 'Abarrotes', description: 'Productos básicos del hogar' },
+            { name: 'BEBIDAS', description: 'REFRESCOS, JUGOS Y AGUAS' },
+            { name: 'SNACKS', description: 'BOTANAS Y DULCES' },
+            { name: 'LÁCTEOS', description: 'LECHE, QUESOS Y YOGURES' },
+            { name: 'ABARROTES', description: 'PRODUCTOS BÁSICOS DEL HOGAR' },
         ];
 
         const categories = this.categoryRepository.create(categoriesData);
@@ -83,43 +83,43 @@ export class SeedService {
     private async seedProducts(categories: Category[]) {
         const productsData = [
             {
-                name: 'Coca Cola 600ml',
+                name: 'COCA COLA 600ML',
                 barcode: '7501055300074',
                 purchasePrice: 12,
                 sellPrice: 18,
                 stock: 50,
                 minStock: 10,
-                unit: 'Pza',
+                unit: 'PZA',
                 category: categories[0],
             },
             {
-                name: 'Sabritas Sal 45g',
+                name: 'SABRITAS SAL 45G',
                 barcode: '7501011115322',
                 purchasePrice: 10,
                 sellPrice: 16,
                 stock: 30,
                 minStock: 5,
-                unit: 'Pza',
+                unit: 'PZA',
                 category: categories[1],
             },
             {
-                name: 'Leche Entera 1L',
+                name: 'LECHE ENTERA 1L',
                 barcode: '7501020512128',
                 purchasePrice: 20,
                 sellPrice: 26,
                 stock: 20,
                 minStock: 4,
-                unit: 'Pza',
+                unit: 'PZA',
                 category: categories[2],
             },
             {
-                name: 'Huevos 1kg',
+                name: 'HUEVOS 1KG',
                 barcode: '0000000000001',
                 purchasePrice: 35,
                 sellPrice: 45,
                 stock: 15,
                 minStock: 2,
-                unit: 'Kg',
+                unit: 'KG',
                 category: categories[3],
             },
         ];
@@ -130,9 +130,9 @@ export class SeedService {
 
     private async seedCustomers() {
         const customersData = [
-            { name: 'Juan Pérez', phone: '5551234567', balance: 0 },
-            { name: 'María García', phone: '5559876543', balance: 150 },
-            { name: 'Cliente Frecuente', phone: '0000000000', balance: 0 },
+            { name: 'JUAN PÉREZ', phone: '5551234567', balance: 0 },
+            { name: 'MARÍA GARCÍA', phone: '5559876543', balance: 150 },
+            { name: 'CLIENTE FRECUENTE', phone: '0000000000', balance: 0 },
         ];
 
         const customers = this.customerRepository.create(customersData);

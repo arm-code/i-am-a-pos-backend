@@ -20,6 +20,10 @@ export class InventoryService {
 
         const product = this.productRepository.create({
             ...productDetails,
+            name: productDetails.name.toUpperCase(),
+            description: productDetails.description?.toUpperCase(),
+            barcode: productDetails.barcode.toUpperCase(),
+            unit: productDetails.unit.toUpperCase(),
             category: categoryId ? ({ id: categoryId } as any) : undefined,
         });
 
@@ -56,6 +60,10 @@ export class InventoryService {
         const updatedProduct = this.productRepository.create({
             ...product,
             ...productDetails,
+            name: productDetails.name?.toUpperCase() || product.name,
+            description: productDetails.description?.toUpperCase() || product.description,
+            barcode: productDetails.barcode?.toUpperCase() || product.barcode,
+            unit: productDetails.unit?.toUpperCase() || product.unit,
             category: categoryId ? ({ id: categoryId } as any) : product.category,
         });
 
@@ -70,7 +78,10 @@ export class InventoryService {
 
     // Category Methods
     async createCategory(name: string, description?: string) {
-        const category = this.categoryRepository.create({ name, description });
+        const category = this.categoryRepository.create({
+            name: name.toUpperCase(),
+            description: description?.toUpperCase(),
+        });
         return await this.categoryRepository.save(category);
     }
 
