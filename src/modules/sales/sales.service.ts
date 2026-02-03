@@ -5,8 +5,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { Sale, PaymentType } from './entities/sale.entity';
+import { Sale } from './entities/sale.entity';
 import { SaleItem } from './entities/sale-item.entity';
+import { PaymentMethod } from './entities/payment-method.entity';
 import { CreateSaleDto } from './dto/create-sale.dto';
 import { Product } from '../inventory/entities/product.entity';
 import { CustomersService } from '../customers/customers.service';
@@ -18,6 +19,8 @@ export class SalesService {
         private readonly saleRepository: Repository<Sale>,
         @InjectRepository(SaleItem)
         private readonly saleItemRepository: Repository<SaleItem>,
+        @InjectRepository(PaymentMethod)
+        private readonly paymentMethodRepository: Repository<PaymentMethod>,
         @InjectRepository(Product)
         private readonly productRepository: Repository<Product>,
         private readonly dataSource: DataSource,
@@ -25,7 +28,16 @@ export class SalesService {
     ) { }
 
     async create(createSaleDto: CreateSaleDto) {
-        const { items, paymentType, customerId } = createSaleDto;
+        const { items, paymentMethodId, customerId } = createSaleDto;
+
+        const paymentMethod = await this.paymentMethodRepository.findOneBy({
+            id: paymentMethodId,
+        });
+        if (!paymentMethod) {
+            throw new NotFoundException(
+                `Payment method with ID ${paymentMethodId} not found`,
+            );
+        }
 
         // Transaction to ensure atomicity
         const queryRunner = this.dataSource.createQueryRunner();
@@ -72,7 +84,7 @@ export class SalesService {
             const sale = this.saleRepository.create({
                 total,
                 tax: total * 0.16, // Example 16% tax
-                paymentType,
+                paymentMethod,
                 items: saleItems,
             });
 
@@ -80,10 +92,10 @@ export class SalesService {
                 const customer = await this.customersService.findOne(customerId);
                 sale.customer = customer;
 
-                if (paymentType === PaymentType.CREDIT) {
+                if (paymentMethod.key === 'CREDIT') {
                     await this.customersService.updateBalance(customerId, total);
                 }
-            } else if (paymentType === PaymentType.CREDIT) {
+            } else if (paymentMethod.key === 'CREDIT') {
                 throw new BadRequestException(
                     'A customer is required for credit sales',
                 );
@@ -103,16 +115,21 @@ export class SalesService {
 
     async findAll() {
         return await this.saleRepository.find({
-            relations: ['customer', 'items', 'items.product'],
+            relations: ['customer', 'items', 'items.product', 'paymentMethod'],
         });
     }
 
     async findOne(id: string) {
         const sale = await this.saleRepository.findOne({
             where: { id },
-            relations: ['customer', 'items', 'items.product'],
+            relations: ['customer', 'items', 'items.product', 'paymentMethod'],
         });
         if (!sale) throw new NotFoundException(`Sale with ID ${id} not found`);
         return sale;
+    }
+
+    // Payment Methods
+    async findAllPaymentMethods() {
+        return await this.paymentMethodRepository.find();
     }
 }

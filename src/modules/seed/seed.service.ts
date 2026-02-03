@@ -4,6 +4,7 @@ import { Repository, DataSource } from 'typeorm';
 import { Product } from '../inventory/entities/product.entity';
 import { Category } from '../inventory/entities/category.entity';
 import { Customer } from '../customers/entities/customer.entity';
+import { PaymentMethod } from '../sales/entities/payment-method.entity';
 
 @Injectable()
 export class SeedService {
@@ -15,11 +16,14 @@ export class SeedService {
         private readonly categoryRepository: Repository<Category>,
         @InjectRepository(Customer)
         private readonly customerRepository: Repository<Customer>,
+        @InjectRepository(PaymentMethod)
+        private readonly paymentMethodRepository: Repository<PaymentMethod>,
     ) { }
 
     async runSeed() {
         await this.cleanDatabase();
 
+        const paymentMethods = await this.seedPaymentMethods();
         const categories = await this.seedCategories();
         await this.seedProducts(categories);
         await this.seedCustomers();
@@ -42,6 +46,26 @@ export class SeedService {
 
         await queryRunner.query('SET session_replication_role = DEFAULT;');
         await queryRunner.release();
+    }
+
+    private async seedPaymentMethods() {
+        const methods = [
+            {
+                key: 'CASH',
+                name: 'Efectivo',
+            },
+            {
+                key: 'CARD',
+                name: 'Tarjeta',
+            },
+            {
+                key: 'CREDIT',
+                name: 'Crédito',
+            },
+        ];
+
+        const paymentMethods = this.paymentMethodRepository.create(methods);
+        return await this.paymentMethodRepository.save(paymentMethods);
     }
 
     private async seedCategories() {

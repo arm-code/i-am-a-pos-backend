@@ -21,11 +21,13 @@ export class ReportsService {
             where: {
                 createdAt: Between(startOfDay, endOfDay),
             },
+            relations: ['paymentMethod'],
         });
 
         const totalSold = sales.reduce((sum, sale) => sum + Number(sale.total), 0);
         const byPaymentType = sales.reduce((acc, sale) => {
-            acc[sale.paymentType] = (acc[sale.paymentType] || 0) + Number(sale.total);
+            const type = sale.paymentMethod?.name || 'Otro';
+            acc[type] = (acc[type] || 0) + Number(sale.total);
             return acc;
         }, {});
 

@@ -20,6 +20,12 @@ export class SalesController {
         return this.salesService.findAll();
     }
 
+    @Get('payment-methods/list')
+    @ApiOperation({ summary: 'Get all payment methods' })
+    findAllPaymentMethods() {
+        return this.salesService.findAllPaymentMethods();
+    }
+
     @Get(':id')
     @ApiOperation({ summary: 'Get a sale by ID' })
     findOne(@Param('id') id: string) {

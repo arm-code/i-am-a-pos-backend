@@ -1,6 +1,5 @@
 import {
     IsArray,
-    IsEnum,
     IsNotEmpty,
     IsNumber,
     IsOptional,
@@ -9,7 +8,6 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PaymentType } from '../entities/sale.entity';
 
 class SaleItemDto {
     @ApiProperty()
@@ -24,10 +22,10 @@ class SaleItemDto {
 }
 
 export class CreateSaleDto {
-    @ApiProperty({ enum: PaymentType })
-    @IsEnum(PaymentType)
+    @ApiProperty()
+    @IsUUID()
     @IsNotEmpty()
-    paymentType: PaymentType;
+    paymentMethodId: string;
 
     @ApiProperty({ required: false })
     @IsUUID()

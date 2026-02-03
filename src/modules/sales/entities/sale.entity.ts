@@ -2,12 +2,7 @@ import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../shared/entities/base.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 import { SaleItem } from './sale-item.entity';
-
-export enum PaymentType {
-    CASH = 'Efectivo',
-    CARD = 'Tarjeta',
-    CREDIT = 'Crédito',
-}
+import { PaymentMethod } from './payment-method.entity';
 
 @Entity('sales')
 export class Sale extends BaseEntity {
@@ -17,12 +12,8 @@ export class Sale extends BaseEntity {
     @Column('numeric', { precision: 12, scale: 2, default: 0 })
     tax: number;
 
-    @Column({
-        type: 'enum',
-        enum: PaymentType,
-        default: PaymentType.CASH,
-    })
-    paymentType: PaymentType;
+    @ManyToOne(() => PaymentMethod, (pm) => pm.sales, { eager: true })
+    paymentMethod: PaymentMethod;
 
     @ManyToOne(() => Customer, (customer) => customer.sales, { nullable: true })
     customer: Customer;
