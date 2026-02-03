@@ -10,29 +10,45 @@ import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 class SaleItemDto {
-    @ApiProperty()
+    @ApiProperty({
+        example: 'uuid-del-producto',
+        description: 'ID del producto a vender',
+    })
     @IsUUID()
     @IsNotEmpty()
     productId: string;
 
-    @ApiProperty()
+    @ApiProperty({
+        example: 2.5,
+        description: 'Cantidad a vender (soporta decimales para peso)',
+    })
     @IsNumber()
     @IsNotEmpty()
     quantity: number;
 }
 
 export class CreateSaleDto {
-    @ApiProperty()
+    @ApiProperty({
+        example: 'uuid-del-metodo-pago',
+        description: 'ID del método de pago (Efectivo, Tarjeta, Crédito)',
+    })
     @IsUUID()
     @IsNotEmpty()
     paymentMethodId: string;
 
-    @ApiProperty({ required: false })
+    @ApiProperty({
+        example: 'uuid-del-cliente',
+        description: 'ID del cliente (obligatorio si el método es Crédito)',
+        required: false,
+    })
     @IsUUID()
     @IsOptional()
     customerId?: string;
 
-    @ApiProperty({ type: [SaleItemDto] })
+    @ApiProperty({
+        type: [SaleItemDto],
+        description: 'Lista de productos en la venta',
+    })
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => SaleItemDto)

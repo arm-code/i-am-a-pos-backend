@@ -8,10 +8,11 @@ import {
     Delete,
     Query,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { InventoryService } from './inventory.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { ApiTags, ApiOperation, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('Inventory')
 @Controller('inventory')
@@ -26,6 +27,12 @@ export class InventoryController {
 
     @Get('products')
     @ApiOperation({ summary: 'Get all products (optional search)' })
+    @ApiQuery({
+        name: 'search',
+        required: false,
+        description: 'Búsqueda por nombre o código de barras',
+        example: 'Coca Cola',
+    })
     findAllProducts(@Query('search') search?: string) {
         return this.inventoryService.findAllProducts(search);
     }
@@ -53,10 +60,8 @@ export class InventoryController {
 
     @Post('categories')
     @ApiOperation({ summary: 'Create a new category' })
-    createCategory(
-        @Body('name') name: string,
-        @Body('description') description?: string,
-    ) {
+    createCategory(@Body() createCategoryDto: CreateCategoryDto) {
+        const { name, description } = createCategoryDto;
         return this.inventoryService.createCategory(name, description);
     }
 
