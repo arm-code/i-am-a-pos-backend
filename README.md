@@ -1,169 +1,72 @@
-# Proyecto backend para la gestión de puntos de venta
+# I AM A POS (Point of Sale Backend)
 
-## Descripción
-Este proyecto es la `API` que tiene como propósito la gestión de diversos puntos de venta con diversos enfoques. La idea es que pueda funcionar con diferentes enfoques; desde un punto de venta común y otros como renta o prestación de servicios.
+Backend para un sistema Punto de Venta (POS) local diseñado para una pequeña tienda minorista. Este sistema funciona 100% offline y gestiona inventario, clientes, ventas y reportes.
 
----
-## Configuración del proyecto para su ejecución
+## Stack Tecnológico
 
-### Prerrequisitos
-- Node.js (versión 18 o superior)
-- Docker Desktop (para base de datos local)
-- pnpm (gestor de paquetes)
+- **Framework**: NestJS (TypeScript)
+- **ORM**: TypeORM
+- **Base de Datos**: PostgreSQL (Local vía Docker)
 
-### Pasos iniciales
-1. Clonar el repositorio en tu máquina
-2. Instalar dependencias: `pnpm install`
-3. Instalar cross-env: `pnpm add -D cross-env`
+## Requisitos Previos
 
-### Configuración de variables de entorno
-1. Crear un archivo `.env` en la raíz del proyecto basado en `.env.template`
-2. Para desarrollo local, usar estas credenciales:
-```env
-# .env (Desarrollo Local)
-BD_HOST=localhost
-BD_PORT=5432
-BD_USER=postgres
-BD_PASSWORD=123456
-BD_DATABASENAME=postgres
-NODE_ENV=development
-```
+1. **Docker y Docker Compose**: Para levantar la base de datos localmente.
+2. **Node.js**: Versión LTS recomendada.
+3. **pnpm**: Instalado globalmente (`npm install -g pnpm`).
 
----
-## Desarrollo Local
+## Instalación y Configuración
 
-### Levantar base de datos con Docker
-```bash
-# Iniciar PostgreSQL local
-npm run db:up
+1. **Clonar el repositorio**:
+   ```bash
+   git clone <repo-url>
+   cd i-am-a-pos-backend
+   ```
 
-# Verificar que esté corriendo
-docker ps
+2. **Instalar dependencias**:
+   ```bash
+   pnpm install
+   ```
 
-# Detener la base de datos
-npm run db:down
-```
+3. **Configurar variables de entorno**:
+   Crea un archivo `.env` basado en `.env.template` (o usa el que ya está configurado para desarrollo local). Asegúrate de que las credenciales coincidan con las de `docker-compose.yml`.
 
-### Ejecutar la aplicación en desarrollo
-```bash
-# Con synchronize: true (crea tablas automáticamente)
-npm run dev
-```
+4. **Levantar la base de datos**:
+   ```bash
+   pnpm run db:up
+   ```
 
-### Flujo de trabajo en desarrollo
-1. **Nuevos desarrolladores**: Usar `synchronize: true` para crear tablas automáticamente
-2. **Nuevas entidades**: Crear las entities en la carpeta correspondiente
-3. **La base de datos se sincroniza** automáticamente con el código
+## Ejecución del Proyecto
 
----
-## Migraciones (Para Producción)
+1. **Modo Desarrollo**:
+   ```bash
+   pnpm run dev
+   ```
+   *Esto levantará la base de datos (si no está arriba) y arrancará el servidor en modo watch.*
 
-### ¿Qué son las migraciones?
-Son archivos que registran todos los cambios en la base de datos. Se usan en producción para aplicar cambios de forma controlada.
+2. **Producción**:
+   ```bash
+   pnpm run build
+   pnpm start:prod
+   ```
 
-### Comandos de migraciones
-```bash
-npx typeorm-ts-node-commonjs -d ./ormconfig.ts migration:generate ./src/migrations/NombreDescriptivo
+## Documentación API (Swagger)
 
-# Ejecutar migraciones pendientes
-npm run migration:run
+Una vez que el servidor esté corriendo, puedes acceder a la documentación interactiva en:
+`http://localhost:3000/api`
 
-# Revertir última migración  
-npm run migration:revert
+## Funcionalidades Principales
 
-# Ver migraciones aplicadas
-npm run migration:show
-```
+- **Inventario**: CRUD de productos y categorías con soporte para ventas por unidad y peso.
+- **Clientes**: Gestión de saldos deudos y abonos.
+- **Ventas**: Registro de ventas con tipos de pago (Efectivo, Tarjeta, Crédito) y descuento automático de stock.
+- **Reportes**: Corte de caja diario y cálculo de ganancias netas.
+- **Seed**: Endpoint controlado para poblar la base de datos con datos de ejemplo (Categorías, Productos y Clientes).
 
-### Flujo para enviar cambios a producción
-1. **Desarrollo**: Trabajar con `synchronize: true`
-2. **Pre-producción**: Generar migración con los cambios
-3. **Producción**: Ejecutar `migration:run` (con `synchronize: false`)
+## Carga de Datos de Ejemplo (Seed)
 
-### Ejemplo práctico
-```bash
-# Después de crear nuevas entities...
-npx typeorm-ts-node-commonjs -d ./ormconfig.ts migration:generate ./src/migrations/AddFinanceTables
+Si deseas probar el sistema con datos de ejemplo, puedes ejecutar el siguiente endpoint (vía Swagger o Postman):
 
-# Verificar el archivo generado en src/migrations/
-# Ejecutar en local para probar
-npm run migration:run
+**POST** `http://localhost:3000/api/seed`
 
-# Cuando esté probado, el archivo de migración se sube al repo
-# En producción se ejecutará automáticamente
-```
-
----
-## Estructura del proyecto
-```
-src/
-├── modules/          # Módulos de negocio existentes
-│   ├── products/     # Gestión de productos
-│   ├── categories/   # Categorías de productos
-│   └── ...
-├── finance/          # Nuevo módulo financiero
-│   ├── entities/     # Entidades (tablas)
-│   ├── services/     # Lógica de negocio
-│   └── controllers/  # Endpoints API
-└── migrations/       # Archivos de migración
-```
-
----
-## Reglas importantes
-- ✅ **Desarrollo**: `synchronize: true` está permitido
-- ❌ **Producción**: `synchronize: false` es obligatorio
-- ✅ **Nuevas features**: Crear migraciones cuando estén probadas
-- ✅ **Base de datos local**: Siempre usar Docker para consistencia
-
----
-## Solución de problemas comunes
-
-### Error de conexión a la base de datos
-```bash
-# Verificar que Docker esté corriendo
-docker ps
-
-# Si no está, iniciar contenedor
-npm run db:up
-```
-
-### Error "NODE_ENV no reconocido"
-```bash
-# Asegurarse de tener cross-env instalado
-pnpm add -D cross-env
-```
-
-### Las tablas no se crean
-- Verificar que `synchronize: true` esté en `app.module.ts`
-- Revisar que las entities estén correctamente importadas en los módulos
-
----
-## Comandos útiles para el equipo
-```bash
-# Ver logs de la base de datos
-docker-compose logs -f postgres
-
-# Conectarse a la base de datos local
-psql -h localhost -U postgres -d postgres
-
-# Restablecer base de datos local (CUIDADO: borra todo)
-docker-compose down && docker volume rm [nombre_volumen] && docker-compose up -d
-```
-
-## Semillas de Desarrollo (Seeds)
-
-### ¿Qué son los Seeds?
-Son datos de ejemplo que se cargan automáticamente en la base de datos local para tener un entorno de desarrollo realista sin empezar desde cero.
-
-### Datos incluidos en los Seeds
-- 🏷️ **7 Tipos de Producto**: Físico, Digital, Servicio, Renta, etc.
-- 📁 **4 Categorías**: Electrónicos, Ropa, Hogar, Deportes
-- 📦 **9 Productos de ejemplo**: Teléfonos, ropa, cursos, equipos para renta
-- 💳 **5 Métodos de pago**: Efectivo, tarjetas, transferencia, Mercado Pago
-
-### Comandos de Seeds
-```bash
-# Ejecutar seeds (cargar datos de ejemplo)
-npm run seed
-```
-
+> [!WARNING]
+> La ejecución de este endpoint **limpiará todas las tablas** antes de insertar los nuevos datos.
