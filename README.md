@@ -28,9 +28,28 @@ Backend para un sistema Punto de Venta (POS) local diseñado para una pequeña t
    ```
 
 3. **Configurar variables de entorno**:
-   Crea un archivo `.env` basado en `.env.template` (o usa el que ya está configurado para desarrollo local). Asegúrate de que las credenciales coincidan con las de `docker-compose.yml`.
+   El proyecto utiliza `@nestjs/config` para gestionar la configuración. Soporta diferentes archivos según el entorno:
+   - `.env`: Configuración por defecto y desarrollo local.
+   - `.env.production`: Configuración para entornos de producción (tiene prioridad sobre `.env`).
 
-4. **Levantar la base de datos**:
+   **Variables requeridas**:
+   | Variable | Descripción | Ejemplo (Dev) |
+   | :--- | :--- | :--- |
+   | `PORT` | Puerto donde correrá el servidor | `4000` |
+   | `BD_HOST` | Host de la base de datos | `localhost` |
+   | `BD_PORT` | Puerto de PostgreSQL | `5432` |
+   | `BD_USER` | Usuario de la DB | `postgres` |
+   | `BD_PASSWORD` | Contraseña de la DB | `123456` |
+   | `BD_DATABASENAME`| Nombre de la base de datos | `postgres` |
+   | `JWT_SECRET` | Clave secreta para tokens JWT | `any-secret` |
+   | `NODE_ENV` | Entorno (`development` / `production`) | `development` |
+
+4. **Conexión a la Base de Datos**:
+   El sistema está configurado para conectarse a una instancia de PostgreSQL. 
+   - **En Desarrollo**: Se recomienda usar Docker. El comando `pnpm run db:up` levanta un contenedor según el archivo `docker-compose.yml`. Las credenciales en el `.env` deben coincidir con las definidas en dicho archivo.
+   - **TypeORM**: La conexión se gestiona de forma asíncrona en el `AppModule`, cargando las entidades automáticamente (`autoLoadEntities: true`). En desarrollo, `synchronize: true` está habilitado para reflejar cambios en las entidades sin migraciones manuales.
+
+5. **Levantar la base de datos**:
    ```bash
    pnpm run db:up
    ```
@@ -53,6 +72,53 @@ Backend para un sistema Punto de Venta (POS) local diseñado para una pequeña t
 
 Una vez que el servidor esté corriendo, puedes acceder a la documentación interactiva en:
 `http://localhost:3000/api`
+
+## Despliegue en Producción
+
+Para poner el sistema en marcha en un entorno de producción, sigue estos pasos:
+
+### 1. Preparar Variables de Entorno
+Crea un archivo `.env.production` en la raíz del proyecto. Este archivo será ignorado por Git pero cargado por NestJS con prioridad:
+
+```env
+PORT=4000
+NODE_ENV=production
+BD_HOST=tu-servidor-db.com
+BD_PORT=5432
+BD_USER=tu_usuario
+BD_PASSWORD=tu_password
+BD_DATABASENAME=tu_db
+JWT_SECRET=una-clave-muy-segura
+HOST_API=https://tu-dominio.com/api
+```
+
+### 2. Inicialización de la Base de Datos
+En este proyecto, se utiliza la propiedad `synchronize: true` de TypeORM (configurada en `AppModule`). 
+
+- **Primera ejecución**: Al arrancar el servidor por primera vez en producción con las credenciales correctas, TypeORM creará automáticamente todas las tablas necesarias.
+- **Importante**: Asegúrate de que el usuario de la DB tenga permisos para crear tablas.
+
+### 3. Compilación y Ejecución
+Ejecuta los siguientes comandos para generar el bundle optimizado y arrancar el servidor:
+
+```bash
+# Instalar solo dependencias necesarias
+pnpm install --prod=false # Se requiere pnpm install completo para hacer el build
+
+# Generar el build (carpeta /dist)
+pnpm run build
+
+# Arrancar el servidor en modo producción
+pnpm run start:prod
+```
+
+### 4. Mantener el proceso activo
+Se recomienda usar un gestor de procesos como **PM2** para asegurar que el backend se reinicie automáticamente:
+
+```bash
+pnpm install -g pm2
+pm2 start dist/main.js --name "pos-backend"
+```
 
 ## Funcionalidades Principales
 
