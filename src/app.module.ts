@@ -6,6 +6,8 @@ import { CustomersModule } from './modules/customers/customers.module';
 import { SalesModule } from './modules/sales/sales.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { SeedModule } from './modules/seed/seed.module';
+import { FinanceModule } from './modules/finance/finance.module';
+import { PurchasesModule } from './modules/purchases/purchases.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { SeedModule } from './modules/seed/seed.module';
     SalesModule,
     ReportsModule,
     SeedModule,
+    FinanceModule,
+    PurchasesModule,
   ],
   controllers: [],
   providers: [],

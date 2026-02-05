@@ -2,12 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between } from 'typeorm';
 import { Sale } from '../sales/entities/sale.entity';
+import { Expense } from '../finance/entities/expense.entity';
+import { CashShift } from '../finance/entities/cash-shift.entity';
 
 @Injectable()
 export class ReportsService {
     constructor(
         @InjectRepository(Sale)
         private readonly saleRepository: Repository<Sale>,
+        @InjectRepository(Expense)
+        private readonly expenseRepository: Repository<Expense>,
     ) { }
 
     private parseLocalDate(dateStr: string): Date {
@@ -50,36 +54,41 @@ export class ReportsService {
         };
     }
 
-    async getNetProfit(startDateStr: string, endDateStr: string) {
-        const start = this.parseLocalDate(startDateStr);
+    async getDayProfitQueryBuilder(dateStr: string) {
+        const localDate = this.parseLocalDate(dateStr);
+        const start = new Date(localDate);
         start.setHours(0, 0, 0, 0);
-
-        const end = this.parseLocalDate(endDateStr);
+        const end = new Date(localDate);
         end.setHours(23, 59, 59, 999);
 
-        console.log(`[Reports] Net Profit para (Local): ${start.toLocaleString()} - ${end.toLocaleString()}`);
+        const result = await this.saleRepository.createQueryBuilder('sale')
+            .leftJoin('sale.items', 'item')
+            .leftJoin('item.product', 'product')
+            .select('SUM(sale.total)', 'revenue')
+            .addSelect('SUM(item.quantity * product.costPrice)', 'cost')
+            .where('sale.createdAt BETWEEN :start AND :end', { start, end })
+            .getRawOne();
 
-        const sales = await this.saleRepository.find({
-            where: {
-                createdAt: Between(start, end),
-            },
-            relations: ['items', 'items.product'],
-        });
-
-        let totalRevenue = 0;
-        let totalCost = 0;
-
-        sales.forEach((sale) => {
-            totalRevenue += Number(sale.total);
-            sale.items.forEach((item) => {
-                totalCost += Number(item.product.purchasePrice) * Number(item.quantity);
-            });
-        });
+        const revenue = Number(result.revenue) || 0;
+        const cost = Number(result.cost) || 0;
 
         return {
-            revenue: totalRevenue,
-            cost: totalCost,
-            netProfit: totalRevenue - totalCost,
+            date: dateStr,
+            revenue,
+            cost,
+            netProfit: revenue - cost,
+        };
+    }
+
+    async getShiftExpenses(shiftId: string) {
+        const result = await this.expenseRepository.createQueryBuilder('expense')
+            .select('SUM(expense.amount)', 'total')
+            .where('expense.cashShiftId = :shiftId', { shiftId })
+            .getRawOne();
+
+        return {
+            shiftId,
+            totalExpenses: Number(result.total) || 0,
         };
     }
 }

@@ -7,12 +7,14 @@ import { SaleItem } from './entities/sale-item.entity';
 import { PaymentMethod } from './entities/payment-method.entity';
 import { InventoryModule } from '../inventory/inventory.module';
 import { CustomersModule } from '../customers/customers.module';
+import { FinanceModule } from '../finance/finance.module';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Sale, SaleItem, PaymentMethod]),
         InventoryModule,
         CustomersModule,
+        FinanceModule,
     ],
     controllers: [SalesController],
     providers: [SalesService],

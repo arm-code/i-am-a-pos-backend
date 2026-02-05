@@ -6,6 +6,8 @@ import { Category } from './entities/category.entity';
 import { Movement, MovementType } from './entities/movement.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { InventoryAdjustment } from './entities/inventory-adjustment.entity';
+import { CreateAdjustmentDto } from './dto/create-adjustment.dto';
 
 @Injectable()
 export class InventoryService {
@@ -16,6 +18,8 @@ export class InventoryService {
         private readonly categoryRepository: Repository<Category>,
         @InjectRepository(Movement)
         private readonly movementRepository: Repository<Movement>,
+        @InjectRepository(InventoryAdjustment)
+        private readonly adjustmentRepository: Repository<InventoryAdjustment>,
     ) { }
 
     async createProduct(createProductDto: CreateProductDto) {
@@ -97,6 +101,35 @@ export class InventoryService {
         await this.movementRepository.save(movement);
 
         return await this.productRepository.save(product);
+    }
+
+    async registerAdjustment(createAdjustmentDto: CreateAdjustmentDto) {
+        const { productId, quantity, reason } = createAdjustmentDto;
+
+        const product = await this.findOneProduct(productId);
+
+        // Update product stock
+        product.stock = Number(product.stock) + Number(quantity);
+        await this.productRepository.save(product);
+
+        // Record adjustment
+        const adjustment = this.adjustmentRepository.create({
+            product,
+            quantity,
+            reason,
+        });
+        const savedAdjustment = await this.adjustmentRepository.save(adjustment);
+
+        // Record movement
+        const movement = this.movementRepository.create({
+            product,
+            quantity,
+            type: MovementType.ADJUSTMENT,
+            reason: `Ajuste manual: ${reason}`,
+        });
+        await this.movementRepository.save(movement);
+
+        return savedAdjustment;
     }
 
     async findAllMovements() {

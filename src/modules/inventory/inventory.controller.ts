@@ -12,6 +12,10 @@ import { InventoryService } from './inventory.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { CreateAdjustmentDto } from './dto/create-adjustment.dto';
+import { UseGuards } from '@nestjs/common';
+import { RolesGuard } from '../../shared/guards/roles.guard';
+import { Roles } from '../../shared/decorators/roles.decorator';
 import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Inventory')
@@ -44,6 +48,8 @@ export class InventoryController {
     }
 
     @Patch('products/:id')
+    @UseGuards(RolesGuard)
+    @Roles('ADMIN')
     @ApiOperation({ summary: 'Update a product' })
     updateProduct(
         @Param('id') id: string,
@@ -82,6 +88,14 @@ export class InventoryController {
     @ApiOperation({ summary: 'Get all inventory movements (Audit Log)' })
     findAllMovements() {
         return this.inventoryService.findAllMovements();
+    }
+
+    @Post('adjustments')
+    @UseGuards(RolesGuard)
+    @Roles('ADMIN')
+    @ApiOperation({ summary: 'Register a manual inventory adjustment' })
+    registerAdjustment(@Body() createAdjustmentDto: CreateAdjustmentDto) {
+        return this.inventoryService.registerAdjustment(createAdjustmentDto);
     }
 
     @Post('categories')

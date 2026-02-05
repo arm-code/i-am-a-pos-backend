@@ -4,6 +4,7 @@ import { Product } from './product.entity';
 
 export enum MovementType {
     SALE = 'SALE',
+    PURCHASE = 'PURCHASE',
     ADJUSTMENT = 'ADJUSTMENT',
     SEED = 'SEED',
     PAYMENT = 'PAYMENT', // For future general use

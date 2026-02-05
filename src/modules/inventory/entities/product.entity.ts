@@ -18,6 +18,9 @@ export class Product extends BaseEntity {
     purchasePrice: number;
 
     @Column('numeric', { precision: 12, scale: 2, default: 0 })
+    costPrice: number;
+
+    @Column('numeric', { precision: 12, scale: 2, default: 0 })
     sellPrice: number;
 
     @Column('numeric', { precision: 12, scale: 3, default: 0 })

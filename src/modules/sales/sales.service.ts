@@ -12,6 +12,7 @@ import { CreateSaleDto } from './dto/create-sale.dto';
 import { Product } from '../inventory/entities/product.entity';
 import { Movement, MovementType } from '../inventory/entities/movement.entity';
 import { CustomersService } from '../customers/customers.service';
+import { FinanceService } from '../finance/services/finance.service';
 
 @Injectable()
 export class SalesService {
@@ -26,6 +27,7 @@ export class SalesService {
         private readonly productRepository: Repository<Product>,
         private readonly dataSource: DataSource,
         private readonly customersService: CustomersService,
+        private readonly financeService: FinanceService,
     ) { }
 
     async create(createSaleDto: CreateSaleDto) {
@@ -38,6 +40,11 @@ export class SalesService {
             throw new NotFoundException(
                 `Payment method with ID ${paymentMethodId} not found`,
             );
+        }
+
+        const activeShift = await this.financeService.getActiveShift();
+        if (!activeShift) {
+            throw new BadRequestException('Cannot make a sale without an open shift.');
         }
 
         // Transaction to ensure atomicity
@@ -96,6 +103,7 @@ export class SalesService {
                 tax: total * 0.16, // Example 16% tax
                 paymentMethod,
                 items: saleItems,
+                cashShift: activeShift,
             });
 
             if (customerId) {

@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../shared/entities/base.entity';
 import { Customer } from '../../customers/entities/customer.entity';
 import { SaleItem } from './sale-item.entity';
 import { PaymentMethod } from './payment-method.entity';
+import { CashShift } from '../../finance/entities/cash-shift.entity';
 
 @Entity('sales')
 export class Sale extends BaseEntity {
@@ -20,4 +21,7 @@ export class Sale extends BaseEntity {
 
     @OneToMany(() => SaleItem, (item) => item.sale, { cascade: true })
     items: SaleItem[];
+
+    @ManyToOne(() => CashShift, (cashShift) => cashShift.sales, { nullable: true })
+    cashShift: CashShift;
 }
