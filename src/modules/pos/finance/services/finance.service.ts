@@ -102,5 +102,13 @@ export class FinanceService {
             order: { createdAt: 'DESC' }
         });
     }
+
+    async findAllShifts(limit?: number): Promise<CashShift[]> {
+        return await this.cashShiftRepository.find({
+            relations: ['user'],
+            order: { startTime: 'DESC' },
+            take: limit,
+        });
+    }
 }
 

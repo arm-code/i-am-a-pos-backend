@@ -37,9 +37,18 @@ export class SalesController {
         description: 'Fecha de búsqueda (YYYY-MM-DD)',
         example: '2026-02-03',
     })
-    findHistory(@Query('date') date?: string) {
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        description: 'Límite de resultados',
+        type: Number,
+    })
+    findHistory(
+        @Query('date') date?: string,
+        @Query('limit') limit?: number
+    ) {
         const historyDateStr = date || new Date().toISOString().split('T')[0];
-        return this.salesService.findHistory(historyDateStr);
+        return this.salesService.findHistory(historyDateStr, limit ? Number(limit) : undefined);
     }
 
     @Get(':id')

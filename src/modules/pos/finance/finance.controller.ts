@@ -1,5 +1,5 @@
-import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Get, Body, UseGuards, Req, Query } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { FinanceService } from './services/finance.service';
 import { CreateCashShiftDto } from './dto/create-cash-shift.dto';
@@ -26,6 +26,18 @@ export class FinanceController {
     @Get('shift/active')
     async getActiveShift() {
         return await this.financeService.getActiveShift();
+    }
+
+    @Get('shifts')
+    @ApiOperation({ summary: 'Get all historical cash shifts (listing)' })
+    @ApiQuery({
+        name: 'limit',
+        required: false,
+        description: 'Límite de resultados',
+        type: Number
+    })
+    async findAllShifts(@Query('limit') limit?: number) {
+        return await this.financeService.findAllShifts(limit ? Number(limit) : undefined);
     }
 
     @Post('expenses')

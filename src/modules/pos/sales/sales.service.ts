@@ -153,7 +153,7 @@ export class SalesService {
         return await this.paymentMethodRepository.find();
     }
 
-    async findHistory(dateStr: string) {
+    async findHistory(dateStr: string, limit?: number) {
         const [year, month, day] = dateStr.split('-').map(Number);
         const localDate = new Date(year, month - 1, day);
 
@@ -169,6 +169,7 @@ export class SalesService {
             },
             relations: ['customer', 'items', 'items.product', 'paymentMethod'],
             order: { createdAt: 'DESC' },
+            take: limit,
         });
     }
 }
