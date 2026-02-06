@@ -12,6 +12,8 @@ export class ReportsService {
         private readonly saleRepository: Repository<Sale>,
         @InjectRepository(Expense)
         private readonly expenseRepository: Repository<Expense>,
+        @InjectRepository(CashShift)
+        private readonly cashShiftRepository: Repository<CashShift>,
     ) { }
 
     private parseLocalDate(dateStr: string): Date {
@@ -81,14 +83,25 @@ export class ReportsService {
     }
 
     async getShiftExpenses(shiftId: string) {
-        const result = await this.expenseRepository.createQueryBuilder('expense')
-            .select('SUM(expense.amount)', 'total')
-            .where('expense.cashShiftId = :shiftId', { shiftId })
-            .getRawOne();
+        // Fetch the shift to get balances
+        const shift = await this.cashShiftRepository.findOneBy({ id: shiftId });
+
+        // Fetch all expenses for this shift
+        const expenses = await this.expenseRepository.find({
+            where: { cashShift: { id: shiftId } },
+            order: { createdAt: 'ASC' }
+        });
+
+        const totalAmount = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
 
         return {
-            shiftId,
-            totalExpenses: Number(result.total) || 0,
+            expenses,
+            totalAmount,
+            shift: shift ? {
+                initialBalance: Number(shift.initialBalance),
+                expectedBalance: Number(shift.expectedBalance),
+                realBalance: Number(shift.realBalance),
+            } : null
         };
     }
 }
