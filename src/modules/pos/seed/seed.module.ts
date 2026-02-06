@@ -7,9 +7,10 @@ import { Category } from '../inventory/entities/category.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { PaymentMethod } from '../sales/entities/payment-method.entity';
 import { User } from '../../auth/entities/user.entity';
+import { Role } from '../../auth/entities/role.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Product, Category, Customer, PaymentMethod, User])],
+    imports: [TypeOrmModule.forFeature([Product, Category, Customer, PaymentMethod, User, Role])],
     controllers: [SeedController],
     providers: [SeedService],
 })

@@ -16,10 +16,11 @@ import { CreateAdjustmentDto } from './dto/create-adjustment.dto';
 import { UseGuards } from '@nestjs/common';
 import { RolesGuard } from '../../../shared/guards/roles.guard';
 import { Roles } from '../../../shared/decorators/roles.decorator';
-import { ApiTags, ApiOperation, ApiQuery, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiQuery, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @ApiTags('Inventory')
+@ApiBearerAuth()
 @Controller('inventory')
 @UseGuards(JwtAuthGuard)
 export class InventoryController {

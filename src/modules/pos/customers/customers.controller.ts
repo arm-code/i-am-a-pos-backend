@@ -8,12 +8,13 @@ import {
     Patch,
     UseGuards,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 
 @ApiTags('Customers')
+@ApiBearerAuth()
 @Controller('customers')
 @UseGuards(JwtAuthGuard)
 export class CustomersController {

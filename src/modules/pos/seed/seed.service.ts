@@ -5,7 +5,8 @@ import { Product } from '../inventory/entities/product.entity';
 import { Category } from '../inventory/entities/category.entity';
 import { Customer } from '../customers/entities/customer.entity';
 import { PaymentMethod } from '../sales/entities/payment-method.entity';
-import { User, UserRole } from '../../auth/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
+import { Role } from '../../auth/entities/role.entity';
 
 @Injectable()
 export class SeedService {
@@ -21,16 +22,19 @@ export class SeedService {
         private readonly paymentMethodRepository: Repository<PaymentMethod>,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>,
     ) { }
 
     async runSeed() {
         await this.cleanDatabase();
 
+        const roles = await this.seedRoles();
         const paymentMethods = await this.seedPaymentMethods();
         const categories = await this.seedCategories();
         await this.seedProducts(categories);
         await this.seedCustomers();
-        await this.seedUsers();
+        await this.seedUsers(roles);
 
         return { message: 'Seed executed successfully - Business Toolbox Ready' };
     }
@@ -50,6 +54,15 @@ export class SeedService {
 
         await queryRunner.query('SET session_replication_role = DEFAULT;');
         await queryRunner.release();
+    }
+
+    private async seedRoles() {
+        const rolesData = [
+            { name: 'ADMIN', description: 'Administrador total del sistema' },
+            { name: 'USER', description: 'Usuario estándar de ventas e inventario' },
+            { name: 'GUEST', description: 'Usuario invitado para demostraciones' },
+        ];
+        return await this.roleRepository.save(this.roleRepository.create(rolesData));
     }
 
     private async seedPaymentMethods() {
@@ -106,21 +119,24 @@ export class SeedService {
         return await this.customerRepository.save(this.customerRepository.create(customersData));
     }
 
-    private async seedUsers() {
+    private async seedUsers(roles: Role[]) {
+        const adminRole = roles.find(r => r.name === 'ADMIN');
+        const guestRole = roles.find(r => r.name === 'GUEST');
+
         const users = [
             {
                 email: 'admin@business-toolbox.com',
                 password: 'adminPassword123!',
                 firstName: 'Admin',
                 lastName: 'General',
-                role: UserRole.ADMIN,
+                role: adminRole,
             },
             {
                 email: 'guest@business-toolbox.demo',
                 password: 'guest-password-demo',
                 firstName: 'Usuario',
                 lastName: 'Invitado',
-                role: UserRole.GUEST,
+                role: guestRole,
             }
         ];
 

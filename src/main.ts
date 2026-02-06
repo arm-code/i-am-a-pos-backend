@@ -23,13 +23,14 @@ async function bootstrap() {
   )
 
   const config = new DocumentBuilder()
-  .setTitle('I Am a point of sale')
-  .setDescription('Backend for my point of sale')
-  .setVersion('1.0')  
-  .build();
+    .setTitle('I Am a point of sale')
+    .setDescription('Backend for my point of sale')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
 
-  const document = SwaggerModule.createDocument( app, config );
-  SwaggerModule.setup( 'api', app, document )
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document)
 
 
   await app.listen(process.env.PORT ?? 4001, '0.0.0.0');

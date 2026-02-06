@@ -1,7 +1,8 @@
 import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User, UserRole } from './entities/user.entity';
+import { User } from './entities/user.entity';
+import { Role } from './entities/role.entity';
 import { CreateUserDto, LoginUserDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -11,6 +12,8 @@ export class AuthService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        @InjectRepository(Role)
+        private readonly roleRepository: Repository<Role>,
         private readonly jwtService: JwtService,
     ) { }
 
@@ -19,8 +22,14 @@ export class AuthService {
             const { password, ...userData } = createUserDto;
             const user = this.userRepository.create({
                 ...userData,
-                password, // The @BeforeInsert decorator will hash this
+                password,
             });
+
+            // Default role is USER for registration
+            const defaultRole = await this.roleRepository.findOne({ where: { name: 'USER' } });
+            if (!defaultRole) throw new BadRequestException('Default role not found in system');
+            user.role = defaultRole;
+
             await this.userRepository.save(user);
             delete (user as any).password;
             return user;
@@ -52,25 +61,30 @@ export class AuthService {
             user: {
                 id: user.id,
                 email: user.email,
-                role: user.role,
+                role: user.role.name,
                 firstName: user.firstName,
                 lastName: user.lastName,
             },
-            token: this.jwtService.sign({ id: user.id, role: user.role }),
+            token: this.jwtService.sign({ id: user.id, role: user.role.name }),
         };
     }
 
     async guestLogin() {
         // Look for a guest user or create one if it doesn't exist
-        let guest = await this.userRepository.findOne({ where: { role: UserRole.GUEST } });
+        let guest = await this.userRepository.findOne({
+            where: { email: 'guest@business-toolbox.demo' },
+            relations: ['role']
+        });
 
         if (!guest) {
+            const guestRole = await this.roleRepository.findOne({ where: { name: 'GUEST' } });
+            if (!guestRole) throw new BadRequestException('Guest role not found in system');
             guest = this.userRepository.create({
                 email: 'guest@business-toolbox.demo',
                 password: 'guest-password-demo',
                 firstName: 'Usuario',
                 lastName: 'Invitado',
-                role: UserRole.GUEST,
+                role: guestRole,
             });
             await this.userRepository.save(guest);
         }
@@ -79,11 +93,11 @@ export class AuthService {
             user: {
                 id: guest.id,
                 email: guest.email,
-                role: guest.role,
+                role: guest.role.name,
                 firstName: guest.firstName,
                 lastName: guest.lastName,
             },
-            token: this.jwtService.sign({ id: guest.id, role: guest.role }),
+            token: this.jwtService.sign({ id: guest.id, role: guest.role.name }),
             isGuest: true,
         };
     }

@@ -1,10 +1,13 @@
 import { Controller, Post, Get, Body, UseGuards, Req } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { FinanceService } from './services/finance.service';
 import { CreateCashShiftDto } from './dto/create-cash-shift.dto';
 import { CloseCashShiftDto } from './dto/close-cash-shift.dto';
 import { CreateExpenseDto } from './dto/create-expense.dto';
 
+@ApiTags('Finance')
+@ApiBearerAuth()
 @Controller('finance')
 @UseGuards(JwtAuthGuard)
 export class FinanceController {

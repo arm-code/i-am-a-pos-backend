@@ -1,9 +1,12 @@
 import { Controller, Post, Get, Body, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { PurchasesService } from './services/purchases.service';
 import { CreateSupplierDto } from './dto/create-supplier.dto';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
 
+@ApiTags('Purchases')
+@ApiBearerAuth()
 @Controller('purchases')
 @UseGuards(JwtAuthGuard)
 export class PurchasesController {
