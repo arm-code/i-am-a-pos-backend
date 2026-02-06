@@ -1,0 +1,33 @@
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { User } from '../../../auth/entities/user.entity';
+import { BaseEntity } from '../../../../shared/entities/base.entity';
+import { Customer } from '../../customers/entities/customer.entity';
+import { SaleItem } from './sale-item.entity';
+import { PaymentMethod } from './payment-method.entity';
+import { CashShift } from '../../finance/entities/cash-shift.entity';
+
+@Entity('pos_sales')
+export class Sale extends BaseEntity {
+    @Column('numeric', { precision: 12, scale: 2, default: 0 })
+    total: number;
+
+    @Column('numeric', { precision: 12, scale: 2, default: 0 })
+    tax: number;
+
+    @ManyToOne(() => PaymentMethod, (pm) => pm.sales, { eager: true })
+    paymentMethod: PaymentMethod;
+
+    @ManyToOne(() => Customer, (customer) => customer.sales, { nullable: true })
+    customer: Customer;
+
+    @OneToMany(() => SaleItem, (item) => item.sale, { cascade: true })
+    items: SaleItem[];
+
+    @ManyToOne(() => CashShift, (cashShift) => cashShift.sales, { nullable: true })
+    cashShift: CashShift;
+
+    @ManyToOne(() => User, (user) => user.sales, { nullable: false })
+    user: User;
+}
+
+

@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { InventoryModule } from './modules/inventory/inventory.module';
-import { CustomersModule } from './modules/customers/customers.module';
-import { SalesModule } from './modules/sales/sales.module';
-import { ReportsModule } from './modules/reports/reports.module';
-import { SeedModule } from './modules/seed/seed.module';
-import { FinanceModule } from './modules/finance/finance.module';
-import { PurchasesModule } from './modules/purchases/purchases.module';
+import { InventoryModule } from './modules/pos/inventory/inventory.module';
+import { CustomersModule } from './modules/pos/customers/customers.module';
+import { SalesModule } from './modules/pos/sales/sales.module';
+import { ReportsModule } from './modules/pos/reports/reports.module';
+import { SeedModule } from './modules/pos/seed/seed.module';
+import { FinanceModule } from './modules/pos/finance/finance.module';
+import { PurchasesModule } from './modules/pos/purchases/purchases.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { PurchasesModule } from './modules/purchases/purchases.module';
     SeedModule,
     FinanceModule,
     PurchasesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
