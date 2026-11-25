@@ -1,3 +1,5 @@
+> ⚠️ **Repositorio archivado.** Fue un experimento descartado (backend en .NET). El proyecto continúa en el monorepo [`arm-code/elchangarro`](https://github.com/arm-code/elchangarro), con un API propio en `apps/api`.
+
 # I AM A POS (Point of Sale Backend)
 
 Backend para un sistema Punto de Venta (POS) local diseñado para una pequeña tienda minorista. Este sistema funciona 100% offline y gestiona inventario, clientes, ventas y reportes.
